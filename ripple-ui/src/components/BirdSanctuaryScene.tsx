@@ -1,14 +1,14 @@
 import Crow from "./crow_fly";
 import Robin from "./Bird_robin";
 import { Suspense } from "react";
-import { useRef, useMemo, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-import { Html } from '@react-three/drei'
-import { Bird } from '../types/bird'
-import RockModel from './RockModel'
+import { useRef, useMemo, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+import { Html } from "@react-three/drei";
+import { Bird } from "../types/bird";
+import RockModel from "./RockModel";
 import Seagull from "./Seagull";
-import Grass from './Grass'
+import Grass from "./Grass";
 
 interface BirdProps {
   position: [number, number, number];
@@ -129,7 +129,6 @@ const Bird = ({ position, ...props }: BirdProps) => {
   return (
     <group
       ref={birdRef}
-      
       onClick={(e) => {
         e.stopPropagation();
         props.onBirdClick(props.id);
@@ -148,8 +147,7 @@ const Bird = ({ position, ...props }: BirdProps) => {
       <group
         scale={[20, 20, 20]}
         rotation={[Math.PI, 0, 0]}
-        
-        position={[0, position[1]-10, 0]}
+        position={[0, position[1] - 10, 0]}
         renderOrder={999}
       >
         <Suspense
@@ -160,19 +158,17 @@ const Bird = ({ position, ...props }: BirdProps) => {
             </mesh>
           }
         >
-          {props.species === "1" ? (
+          {props.species === "White_crowned_Sparrow" ? (
             <Crow />
-          ) : props.species === "2" ? (
-            <Robin/>
-          ) : props.species === "3" ? (
-            <Seagull/>
+          ) : props.species === "1" ? (
+            <Robin />
+          ) : props.species === "Heermann_Gull" ? (
+            <Seagull />
           ) : (
-              <Crow/>
+            <Crow />
           )}
         </Suspense>
       </group>
-
-   
 
       {hovered && (
         <Html>
@@ -281,8 +277,8 @@ const Rocks = () => {
         const position: [number, number, number] = [
           Math.cos(angle) * radius,
           scale * 0.5 - 0.3,
-          Math.sin(angle) * radius
-        ]
+          Math.sin(angle) * radius,
+        ];
 
         return (
           <RockModel
@@ -295,7 +291,7 @@ const Rocks = () => {
             ]}
             scale={[scale, scale * 0.8, scale]}
           />
-        )
+        );
       })}
     </group>
   );
@@ -376,10 +372,10 @@ const Clouds = () => {
                   scale={[cloudScale, cloudScale * 0.6, cloudScale]}
                 >
                   <sphereGeometry args={[1, 16, 16]} />
-                  <meshStandardMaterial 
-                    color="white" 
-                    transparent 
-                    opacity={0.8 - (radius / 150)}
+                  <meshStandardMaterial
+                    color="white"
+                    transparent
+                    opacity={0.8 - radius / 150}
                     roughness={1}
                   />
                 </mesh>
@@ -429,13 +425,8 @@ const BirdSanctuaryScene: FC<BirdSanctuarySceneProps> = ({
         receiveShadow
       >
         <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial 
-          color="#355e3b"
-          roughness={0.8}
-          metalness={0.1}
-        />
+        <meshStandardMaterial color="#355e3b" roughness={0.8} metalness={0.1} />
       </mesh>
-      
       {/* Grass layer */}
       <Grass />
       <Mountains />
