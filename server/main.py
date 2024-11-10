@@ -215,9 +215,9 @@ index_to_class = {
     199: 'Least_Auklet'
 }
 # Replace with your actual endpoint URL
-DATABRICKS_ENDPOINT_URL = 'https://dbc-646e52e6-ebdc.cloud.databricks.com/serving-endpoints/BirdClassificationModel/invocations'
 
 # Get the Databricks token from environment variable or use a placeholder
+DATABRICKS_ENDPOINT_URL = os.getenv("DATABRICKS_ENDPOINT_URL")
 
 HEADERS = {
     'Authorization': f'Bearer {os.getenv("DATABRICKS_TOKEN")}',
