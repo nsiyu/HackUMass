@@ -3,6 +3,10 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import { Bird } from '../types/bird'
+import { useLoader } from '@react-three/fiber'
+import { EXRLoader } from 'three-stdlib'
+import { useTextures } from '../hooks/useTextures'
+import RockModel from './RockModel'
 
 interface BirdProps {
   position: [number, number, number]
@@ -31,7 +35,6 @@ const Bird = ({ position, speed = 1, radius = 1, color = '#8B4513', size = 0.2, 
     baseHeight: 5 + Math.random() * 3,
   }), [speed])
 
-  // Add wing flap animation state
   const wingState = useRef({
     flapOffset: Math.random() * Math.PI * 2,
     flapSpeed: 12 + Math.random() * 4
@@ -43,7 +46,6 @@ const Bird = ({ position, speed = 1, radius = 1, color = '#8B4513', size = 0.2, 
     const time = state.clock.getElapsedTime()
     const currentPos = birdRef.current.position
     
-    // Change direction periodically
     if (time - offset.lastDirectionChange > offset.changeDirectionInterval) {
       offset.lastDirectionChange = time
       targetPosition.current.set(
@@ -73,12 +75,10 @@ const Bird = ({ position, speed = 1, radius = 1, color = '#8B4513', size = 0.2, 
       )
     }
 
-    // Enhanced wing flapping animation
     const wingFlap = Math.sin(time * wingState.current.flapSpeed + wingState.current.flapOffset)
-    const wingUpDown = Math.abs(wingFlap) * 0.8 // More natural up-down motion
-    const wingTwist = wingFlap * 0.3 // Add slight twisting motion
+    const wingUpDown = Math.abs(wingFlap) * 0.8 
+    const wingTwist = wingFlap * 0.3 
     
-    // Apply animations to wing groups
     birdRef.current.children.forEach(child => {
       if (child.userData.wing) {
         child.rotation.z = wingFlap * 0.6
@@ -87,7 +87,6 @@ const Bird = ({ position, speed = 1, radius = 1, color = '#8B4513', size = 0.2, 
       }
     })
 
-    // Add slight body tilt during flight
     birdRef.current.rotation.z = Math.sin(time * 2) * 0.05
   })
 
@@ -109,7 +108,6 @@ const Bird = ({ position, speed = 1, radius = 1, color = '#8B4513', size = 0.2, 
         document.body.style.cursor = 'auto'
       }}
     >
-      {/* Body */}
       <mesh castShadow>
         <capsuleGeometry args={[size * 0.15, size * 0.4, 8, 16]} />
         <meshStandardMaterial 
@@ -247,7 +245,6 @@ const TreeCluster = ({ position, density = 1, distanceFromCenter = 0 }) => {
 }
 
 const Trees = () => {
-  // Create concentric rings of trees with increasing density and fade
   const rings = 8
   const treeClusters = []
   
@@ -294,9 +291,9 @@ const Rocks = () => {
           scale * 0.5 - 0.3,
           Math.sin(angle) * radius
         ]
-        
+
         return (
-          <mesh
+          <RockModel
             key={i}
             position={position}
             rotation={[
@@ -305,13 +302,7 @@ const Rocks = () => {
               Math.random() * Math.PI
             ]}
             scale={[scale, scale * 0.8, scale]}
-          >
-            <dodecahedronGeometry args={[1, 1]} />
-            <meshStandardMaterial 
-              color={`rgb(${120 + Math.random() * 40}, ${120 + Math.random() * 40}, ${120 + Math.random() * 40})`}
-              roughness={0.8}
-            />
-          </mesh>
+          />
         )
       })}
     </group>
@@ -396,7 +387,7 @@ const Clouds = () => {
                   <meshStandardMaterial 
                     color="white" 
                     transparent 
-                    opacity={0.8 - (radius / 150)} // Fade out distant clouds
+                    opacity={0.8 - (radius / 150)}
                     roughness={1}
                   />
                 </mesh>
