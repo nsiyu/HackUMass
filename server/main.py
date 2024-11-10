@@ -7,6 +7,8 @@ import io
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+from typing import Optional
 
 load_dotenv()
 
@@ -24,6 +26,15 @@ if not DATABRICKS_TOKEN:
         status_code=500,
         detail="DATABRICKS_TOKEN environment variable is not set"
     )
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise HTTPException(
+        status_code=500,
+        detail="OPENAI_API_KEY environment variable is not set"
+    )
+
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 HEADERS = {
     'Authorization': f'Bearer {DATABRICKS_TOKEN}',
@@ -295,3 +306,45 @@ async def predict(file: UploadFile = File(...)):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing prediction response: {str(e)}")
+
+@app.get("/bird-info/{species}")
+async def get_bird_info(species: str):
+    try:
+        species_name = species.replace("_", " ")
+        
+        prompt = f"""
+        Provide information about the {species_name} bird in a structured format.
+        Include:
+        1. A brief summary of the bird (2-3 sentences)
+        2. Whether it is endangered (just say 'Yes', 'No', or 'Threatened')
+        3. One interesting fact about the bird
+        
+        Format the response as a JSON object with keys: summary, endangered, fact
+        """
+
+        response = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a knowledgeable ornithologist providing accurate, concise information about birds."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=300
+        )
+
+        try:
+            info = json.loads(response.choices[0].message.content)
+        except json.JSONDecodeError:
+            info = {
+                "summary": "Information not available at this time.",
+                "endangered": "Unknown",
+                "fact": "No fact available."
+            }
+
+        return info
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching bird information: {str(e)}"
+        )
