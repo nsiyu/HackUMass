@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 .env
+
+public/dry_riverbed_rock_4k.gltf
