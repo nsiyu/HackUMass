@@ -208,3 +208,30 @@ function transformBirdData(dbBird: any): Bird {
     },
   };
 }
+
+export async function getBirdInfo(species: string) {
+  try {
+    const response = await fetch('http://localhost:8000/bird-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      credentials: 'include', // This helps with CORS
+      body: JSON.stringify({ species }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch bird information');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching bird info:', error);
+    return {
+      summary: 'Information temporarily unavailable',
+      conservationStatus: 'Unknown',
+      funFacts: ['Information currently unavailable'],
+    };
+  }
+}

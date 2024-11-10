@@ -37,11 +37,33 @@ const AddBirdModal: FC<{
     }
   });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isLoadingSpecies, setIsLoadingSpecies] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (formData.image) {
-      setFormData(prev => ({ ...prev, species: 'American Robin' }));
+      setIsLoadingSpecies(true);
+      
+      // Create FormData for the prediction request
+      const predictionData = new FormData();
+      predictionData.append('file', formData.image);
+
+      // Make the prediction request
+      fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        body: predictionData
+      })
+      .then(response => response.json())
+      .then(data => {
+        setFormData(prev => ({ ...prev, species: data.predicted_class }));
+      })
+      .catch(error => {
+        console.error('Error predicting species:', error);
+        setFormData(prev => ({ ...prev, species: 'Prediction failed' }));
+      })
+      .finally(() => {
+        setIsLoadingSpecies(false);
+      });
       
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -122,6 +144,19 @@ const AddBirdModal: FC<{
     }
   };
 
+  // Update the species input field in the form to show loading state
+  const speciesField = (
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Species (Auto-detected)</label>
+      <input
+        type="text"
+        value={isLoadingSpecies ? 'Detecting species...' : formData.species}
+        className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 bg-gray-50"
+        disabled
+      />
+    </div>
+  );
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -139,14 +174,14 @@ const AddBirdModal: FC<{
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-6 py-3 bg-light-coral text-white rounded-lg hover:bg-coral-pink"
+                className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
               >
                 Upload Image
               </button>
               <button
                 type="button"
                 onClick={handleImageCapture}
-                className="px-6 py-3 bg-light-coral text-white rounded-lg hover:bg-coral-pink"
+                className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
               >
                 Take Photo
               </button>
@@ -182,15 +217,7 @@ const AddBirdModal: FC<{
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Species (Auto-detected)</label>
-                <input
-                  type="text"
-                  value={formData.species}
-                  className="mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 bg-gray-50"
-                  disabled
-                />
-              </div>
+              {speciesField}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">Location (Auto-detected)</label>
@@ -212,7 +239,7 @@ const AddBirdModal: FC<{
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-light-coral text-white rounded-md hover:bg-coral-pink"
+                  className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
                 >
                   Add Bird
                 </button>

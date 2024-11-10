@@ -9,6 +9,7 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from typing import Optional
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -43,13 +44,12 @@ HEADERS = {
 
 app = FastAPI()
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 index_to_class = {
@@ -348,3 +348,42 @@ async def get_bird_info(species: str):
             status_code=500,
             detail=f"Error fetching bird information: {str(e)}"
         )
+
+class BirdInfoRequest(BaseModel):
+    species: str
+
+@app.post("/bird-info")
+async def get_bird_info(request: BirdInfoRequest):
+    try:
+        # Format the species name for better readability
+        species_name = request.species.replace('_', ' ')
+        
+        # Create the prompt for GPT
+        prompt = f"""Provide information about the {species_name} in the following JSON format:
+        {{
+            "summary": "A brief description of the bird",
+            "conservationStatus": "Current conservation status",
+            "funFacts": ["Fact 1", "Fact 2", "Fact 3"]
+        }}
+        Keep the response concise and focused on interesting facts about the bird."""
+
+        # Make request to OpenAI
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a knowledgeable ornithologist providing accurate information about birds."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
+
+        # Parse the response
+        try:
+            bird_info = json.loads(response.choices[0].message.content)
+            return bird_info
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=500, detail="Failed to parse bird information")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

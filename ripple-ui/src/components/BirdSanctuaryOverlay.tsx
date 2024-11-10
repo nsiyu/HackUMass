@@ -50,7 +50,7 @@ const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds, setShowAdd
 
   return (
     <div 
-      className={`fixed right-0 top-0 h-full bg-white/90 shadow-lg flex flex-col transition-all duration-300 ${
+      className={`fixed right-0 top-0 h-full bg-emerald-50/95 backdrop-blur-sm shadow-lg flex flex-col transition-all duration-300 ${
         isCollapsed ? 'w-0' : 'w-80'
       }`}
     >
@@ -67,105 +67,103 @@ const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds, setShowAdd
         )}
       </button>
 
-      <div className={`${isCollapsed ? 'hidden' : 'flex flex-col h-full'}`}>
-        <div className="p-6 bg-white/95 border-b border-gray-200">
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Bird Sanctuary</h2>
-              <p className="text-sm text-gray-600">Virtual bird collection</p>
-            </div>
+      <div className={`${isCollapsed ? 'hidden' : 'flex flex-col h-full p-6'}`}>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-emerald-900">Bird Sanctuary</h2>
+          <p className="text-sm text-emerald-700">Virtual bird collection</p>
+        </div>
 
-            <div className="flex space-x-2">
-              <button 
-                onClick={() => setShowAddBirdModal(true)}
-                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Add Bird
-              </button>
-              <button 
-                onClick={handleUploadClick}
-                className="flex-1 bg-light-coral text-white px-4 py-2 rounded-lg hover:bg-coral-pink transition-colors"
-              >
-                Upload
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </div>
+        <div className="flex gap-3 mb-6">
+          <button 
+            onClick={() => setShowAddBirdModal(true)}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg transition-colors"
+          >
+            Add Bird
+          </button>
+          <button 
+            onClick={handleUploadClick}
+            className="flex-1 bg-teal-500 hover:bg-teal-600 text-white py-2 px-4 rounded-lg transition-colors"
+          >
+            Upload
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </div>
 
-            <div className="space-y-2">
-              <input
-                type="text"
-                placeholder="Search birds..."
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-light-coral"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <select
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-light-coral"
-                value={filterSpecies}
-                onChange={(e) => setFilterSpecies(e.target.value)}
-              >
-                {species.map(species => (
-                  <option key={species} value={species}>
-                    {species.charAt(0).toUpperCase() + species.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="space-y-3 mb-6">
+          <input
+            type="text"
+            placeholder="Search birds..."
+            className="w-full px-4 py-2 rounded-lg border border-emerald-200 bg-white/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            className="w-full px-4 py-2 rounded-lg border border-emerald-200 bg-white/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+            value={filterSpecies}
+            onChange={(e) => setFilterSpecies(e.target.value)}
+          >
+            {species.map(species => (
+              <option key={species} value={species}>
+                {species.charAt(0).toUpperCase() + species.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            <div className="bg-light-coral/10 rounded-lg p-4">
-              <h3 className="font-bold text-gray-900 mb-2">Stats</h3>
-              <div className="space-y-1 text-sm">
-                <p>Total Birds: {stats.totalBirds}</p>
-                <p>Average Length: {stats.averageLength.toFixed(1)}cm</p>
-                <p>Last Added: {new Date(stats.lastAdded).toLocaleDateString()}</p>
-              </div>
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-4 mb-6 border border-emerald-100">
+          <h3 className="text-lg font-semibold text-emerald-900 mb-3">Stats</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-emerald-700">Total Birds:</span>
+              <span className="font-medium text-emerald-900">{stats.totalBirds}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-emerald-700">Average Length:</span>
+              <span className="font-medium text-emerald-900">{stats.averageLength.toFixed(1)}cm</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-emerald-700">Last Added:</span>
+              <span className="font-medium text-emerald-900">{new Date(stats.lastAdded).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="space-y-2">
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-3">
             {filteredBirds.map(bird => (
               <div 
                 key={bird.id} 
-                className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow space-y-2"
+                className="bg-white/80 rounded-lg p-4 border border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start mb-2">
                   <div>
-                    <p className="font-bold text-gray-900">{bird.name}</p>
-                    <p className="text-sm text-gray-600">{bird.species}</p>
+                    <h3 className="font-medium text-emerald-900">{bird.name}</h3>
+                    <p className="text-sm text-emerald-700">{bird.species}</p>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {bird.length}cm
-                  </span>
+                  <span className="text-sm font-medium text-emerald-700">{bird.length}cm</span>
                 </div>
-                
-                <div className="text-xs space-y-1 text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <span>Last spotted:</span>
-                    <span className="font-medium">
-                      {new Date(bird.lastSpotted.date).toLocaleDateString()} at {bird.lastSpotted.location.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>By:</span>
-                    <div className="flex items-center gap-1">
-                      {bird.lastSpotted.spottedBy.avatar && (
-                        <img 
-                          src={bird.lastSpotted.spottedBy.avatar} 
-                          alt={bird.lastSpotted.spottedBy.name}
-                          className="w-4 h-4 rounded-full"
-                        />
-                      )}
-                      <span className="font-medium">{bird.lastSpotted.spottedBy.name}</span>
-                    </div>
-                  </div>
+                <div className="text-sm text-emerald-600">
+                  <p className="mb-1">
+                    Last spotted: {new Date(bird.lastSpotted.date).toLocaleDateString()}
+                  </p>
+                  <p className="text-xs">at {bird.lastSpotted.location.name}</p>
+                </div>
+                <div className="flex items-center mt-2 text-xs text-emerald-600">
+                  <span>By:</span>
+                  {bird.lastSpotted.spottedBy.avatar && (
+                    <img 
+                      src={bird.lastSpotted.spottedBy.avatar}
+                      alt={bird.lastSpotted.spottedBy.name}
+                      className="w-4 h-4 rounded-full mx-1"
+                    />
+                  )}
+                  <span>{bird.lastSpotted.spottedBy.name}</span>
                 </div>
               </div>
             ))}
