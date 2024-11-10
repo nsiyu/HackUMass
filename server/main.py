@@ -4,7 +4,10 @@ import json
 import numpy as np
 from PIL import Image
 import io
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -215,12 +218,9 @@ index_to_class = {
 DATABRICKS_ENDPOINT_URL = 'https://dbc-646e52e6-ebdc.cloud.databricks.com/serving-endpoints/BirdClassificationModel/invocations'
 
 # Get the Databricks token from environment variable or use a placeholder
-DATABRICKS_TOKEN = os.getenv('DATABRICKS_TOKEN')
-if DATABRICKS_TOKEN is None:
-    DATABRICKS_TOKEN = ''  # Replace with your actual token or set it as an environment variable
 
 HEADERS = {
-    'Authorization': f'Bearer {DATABRICKS_TOKEN}',
+    'Authorization': f'Bearer {os.getenv("DATABRICKS_TOKEN")}',
     'Content-Type': 'application/json'
 }
 
