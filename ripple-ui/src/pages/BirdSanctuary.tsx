@@ -105,6 +105,7 @@ const BirdSanctuary: FC<BirdSanctuaryProps> = ({
         radius: 2,
         color: "#8B4513",
         size: 0.6,
+        image: data.image,
         lastSpotted: {
           date: new Date().toISOString(),
           location: {
