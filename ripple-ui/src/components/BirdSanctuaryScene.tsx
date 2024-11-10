@@ -1,4 +1,5 @@
-import BirdModel from "./Bird_robin";
+import Crow from "./crow_fly";
+import Robin from "./Bird_robin";
 import { Suspense } from "react";
 import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -6,6 +7,7 @@ import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import { Bird } from '../types/bird'
 import RockModel from './RockModel'
+import Seagull from "./Seagull";
 
 interface BirdProps {
   position: [number, number, number];
@@ -126,6 +128,7 @@ const Bird = ({ position, ...props }: BirdProps) => {
   return (
     <group
       ref={birdRef}
+      
       onClick={(e) => {
         e.stopPropagation();
         props.onBirdClick(props.id);
@@ -142,9 +145,10 @@ const Bird = ({ position, ...props }: BirdProps) => {
       renderOrder={999}
     >
       <group
-        scale={[15, 15, 15]}
+        scale={[20, 20, 20]}
         rotation={[Math.PI, 0, 0]}
-        position={[0, 1, 0]}
+        
+        position={[0, position[1]-10, 0]}
         renderOrder={999}
       >
         <Suspense
@@ -155,15 +159,19 @@ const Bird = ({ position, ...props }: BirdProps) => {
             </mesh>
           }
         >
-          <BirdModel />
+          {props.species === "1" ? (
+            <Crow />
+          ) : props.species === "2" ? (
+            <Robin/>
+          ) : props.species === "3" ? (
+            <Seagull/>
+          ) : (
+              <Crow/>
+          )}
         </Suspense>
       </group>
 
-      {/* Make marker smaller to see if bird is visible */}
-      <mesh position={[0, 0, 0]} scale={[0.1, 0.1, 0.1]}>
-        <sphereGeometry args={[0.2, 16, 16]} />
-        <meshBasicMaterial color="yellow" />
-      </mesh>
+   
 
       {hovered && (
         <Html>
