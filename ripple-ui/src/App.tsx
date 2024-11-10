@@ -7,6 +7,8 @@ import BirdSanctuary from './pages/BirdSanctuary'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import AuthModal from './components/AuthModal'
+import Leaderboard from './pages/Leaderboard'
+import DailyChallenge from './pages/DailyChallenge'
 
 const App = () => {
   const [session, setSession] = useState<Session | null>(null)
@@ -36,6 +38,8 @@ const App = () => {
         />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/daily-challenge" element={<DailyChallenge />} />
       </Routes>
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </>
