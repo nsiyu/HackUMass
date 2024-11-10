@@ -135,6 +135,7 @@ export async function getBirds() {
     .select(
       `
       *,
+      image_url,
       bird_sightings (
         spotted_at,
         location_name,
@@ -186,11 +187,12 @@ function transformBirdData(dbBird: any): Bird {
     species: dbBird.species,
     dateAdded: dbBird.date_added,
     length: dbBird.length,
-    pos: [spawnX, 2, spawnZ], // Random position instead of stored position
+    pos: [spawnX, 2, spawnZ],
     speed: dbBird.speed,
     radius: dbBird.radius,
     color: dbBird.color,
     size: dbBird.size,
+    imageUrl: dbBird.image_url,
     lastSpotted: {
       date: dbBird.latest_sighting.spotted_at,
       location: {
