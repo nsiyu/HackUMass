@@ -1,11 +1,11 @@
-import { useRef, useMemo, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import { Html } from "@react-three/drei";
-import { Bird } from "../types/bird";
 import BirdModel from "./Bird_robin";
 import { Suspense } from "react";
-import SimplifiedBirdModel from "./SimpleModel";
+import { useRef, useMemo, useState } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
+import { Html } from '@react-three/drei'
+import { Bird } from '../types/bird'
+import RockModel from './RockModel'
 
 interface BirdProps {
   position: [number, number, number];
@@ -272,11 +272,11 @@ const Rocks = () => {
         const position: [number, number, number] = [
           Math.cos(angle) * radius,
           scale * 0.5 - 0.3,
-          Math.sin(angle) * radius,
-        ];
+          Math.sin(angle) * radius
+        ]
 
         return (
-          <mesh
+          <RockModel
             key={i}
             position={position}
             rotation={[
@@ -285,16 +285,8 @@ const Rocks = () => {
               Math.random() * Math.PI,
             ]}
             scale={[scale, scale * 0.8, scale]}
-          >
-            <dodecahedronGeometry args={[1, 1]} />
-            <meshStandardMaterial
-              color={`rgb(${120 + Math.random() * 40}, ${
-                120 + Math.random() * 40
-              }, ${120 + Math.random() * 40})`}
-              roughness={0.8}
-            />
-          </mesh>
-        );
+          />
+        )
       })}
     </group>
   );
@@ -375,10 +367,10 @@ const Clouds = () => {
                   scale={[cloudScale, cloudScale * 0.6, cloudScale]}
                 >
                   <sphereGeometry args={[1, 16, 16]} />
-                  <meshStandardMaterial
-                    color="white"
-                    transparent
-                    opacity={0.8 - radius / 150} // Fade out distant clouds
+                  <meshStandardMaterial 
+                    color="white" 
+                    transparent 
+                    opacity={0.8 - (radius / 150)}
                     roughness={1}
                   />
                 </mesh>

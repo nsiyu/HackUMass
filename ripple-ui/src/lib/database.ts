@@ -1,5 +1,4 @@
 import { supabase } from './supabase'
-import type { Database } from '../types/database'
 import type { Bird } from '../types/bird'
 
 export const DEFAULT_USER = {
@@ -55,7 +54,6 @@ export async function addBird(birdData: Omit<Bird, 'id'>) {
 
   if (birdError) throw birdError
 
-  // Add the initial sighting
   const { data: sighting, error: sightingError } = await supabase
     .from('bird_sightings')
     .insert({
