@@ -6,10 +6,40 @@ from PIL import Image
 import io
 from dotenv import load_dotenv
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
+# Add debugging for environment variables
+DATABRICKS_ENDPOINT_URL = os.getenv("DATABRICKS_ENDPOINT_URL")
+if not DATABRICKS_ENDPOINT_URL:
+    raise HTTPException(
+        status_code=500,
+        detail="DATABRICKS_ENDPOINT_URL environment variable is not set"
+    )
+
+DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+if not DATABRICKS_TOKEN:
+    raise HTTPException(
+        status_code=500,
+        detail="DATABRICKS_TOKEN environment variable is not set"
+    )
+
+HEADERS = {
+    'Authorization': f'Bearer {DATABRICKS_TOKEN}',
+    'Content-Type': 'application/json'
+}
+
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 index_to_class = {
     0: 'American_Crow',
@@ -212,13 +242,6 @@ index_to_class = {
     197: 'Spotted_Catbird',
     198: 'Crested_Auklet',
     199: 'Least_Auklet'
-}
-
-DATABRICKS_ENDPOINT_URL = os.getenv("DATABRICKS_ENDPOINT_URL")
-
-HEADERS = {
-    'Authorization': f'Bearer {os.getenv("DATABRICKS_TOKEN")}',
-    'Content-Type': 'application/json'
 }
 
 def load_and_preprocess_image(image_file) -> np.ndarray:
