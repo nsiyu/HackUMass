@@ -10,6 +10,8 @@ interface BirdModalProps {
 }
 
 const BirdModal: FC<BirdModalProps> = ({ bird, onClose }) => {
+  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -93,7 +95,7 @@ const BirdModal: FC<BirdModalProps> = ({ bird, onClose }) => {
 
             <div className="h-[400px] bg-gray-100 rounded-lg overflow-hidden">
               <Map
-                mapboxAccessToken="your-mapbox-token"
+                mapboxAccessToken={mapboxToken}
                 initialViewState={{
                   longitude: bird.lastSpotted.location.lng,
                   latitude: bird.lastSpotted.location.lat,

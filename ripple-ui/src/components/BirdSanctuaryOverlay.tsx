@@ -1,15 +1,18 @@
-import { FC, useState } from 'react'
+import { FC, useState, useRef } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Bird } from '../types/bird'
 
 interface BirdSanctuaryOverlayProps {
   birds: Bird[]
+  setShowAddBirdModal: (show: boolean) => void
+  onUpload: (file: File) => void
 }
 
-const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds }) => {
+const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds, setShowAddBirdModal, onUpload }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterSpecies, setFilterSpecies] = useState<string>('all')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const species = ['all', ...new Set(birds.map(bird => bird.species))]
   
@@ -20,10 +23,29 @@ const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds }) => {
     return matchesSearch && matchesSpecies
   })
 
+  const sortedBirds = [...birds].sort((a, b) => 
+    new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
+  )
+
   const stats = {
     totalBirds: birds.length,
-    averageLength: birds.reduce((acc, bird) => acc + bird.length, 0) / birds.length,
-    lastAdded: birds[birds.length - 1].dateAdded
+    averageLength: birds.length > 0 
+      ? birds.reduce((acc, bird) => acc + bird.length, 0) / birds.length 
+      : 0,
+    lastAdded: sortedBirds.length > 0 
+      ? sortedBirds[0].dateAdded 
+      : new Date().toISOString()
+  }
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      onUpload(file)
+    }
   }
 
   return (
@@ -54,12 +76,25 @@ const BirdSanctuaryOverlay: FC<BirdSanctuaryOverlayProps> = ({ birds }) => {
             </div>
 
             <div className="flex space-x-2">
-              <button className="flex-1 bg-light-coral text-white px-4 py-2 rounded-lg hover:bg-coral-pink transition-colors">
+              <button 
+                onClick={() => setShowAddBirdModal(true)}
+                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
                 Add Bird
               </button>
-              <button className="flex-1 bg-melon text-white px-4 py-2 rounded-lg hover:bg-apricot transition-colors">
+              <button 
+                onClick={handleUploadClick}
+                className="flex-1 bg-light-coral text-white px-4 py-2 rounded-lg hover:bg-coral-pink transition-colors"
+              >
                 Upload
               </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
             </div>
 
             <div className="space-y-2">

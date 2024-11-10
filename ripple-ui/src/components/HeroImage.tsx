@@ -2,14 +2,15 @@ import { FC } from 'react'
 
 const HeroImage: FC = () => {
   return (
-    <div className="relative w-full h-96 rounded-lg shadow-lg overflow-hidden">
+    <div className="relative">
       <img
-        src="https://cdn.shopify.com/s/files/1/0024/1788/5284/files/clown-fish.jpg"
-        alt="Clownfish swimming in anemone"
-        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+        src="https://img.pikbest.com/origin/10/06/97/57epIkbEsTDyv.jpg!w700wp"
+        alt="Crystal Bird"
+        className="rounded-lg shadow-2xl w-full h-auto object-cover"
       />
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-light-coral/10 to-transparent" />
+      {/* Optional decorative elements */}
+      <div className="absolute -z-10 top-8 -right-8 w-72 h-72 bg-light-coral rounded-full opacity-20 blur-3xl" />
+      <div className="absolute -z-10 -bottom-8 -left-8 w-72 h-72 bg-melon rounded-full opacity-20 blur-3xl" />
     </div>
   )
 }

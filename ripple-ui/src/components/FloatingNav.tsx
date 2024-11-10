@@ -1,35 +1,74 @@
 import { FC } from 'react'
-import { UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { Session } from '@supabase/supabase-js'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+import { 
+  Cog6ToothIcon, 
+  UserCircleIcon, 
+  ChartBarIcon,
+  BookmarkIcon,
+  BellIcon,
+  ArrowLeftOnRectangleIcon
+} from '@heroicons/react/24/outline'
 
-const FloatingNav: FC = () => {
+interface FloatingNavProps {
+  session: Session | null
+  setShowAuthModal: (show: boolean) => void
+}
+
+const FloatingNav: FC<FloatingNavProps> = ({ session, setShowAuthModal }) => {
   const navigate = useNavigate()
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    navigate('/')
+  }
+
   return (
-    <div className="fixed left-6 top-6 flex flex-col gap-4 z-50">
-      <button
-        onClick={() => navigate('/profile')}
-        className="p-3 bg-white/90 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:scale-110"
-        title="Profile"
-      >
-        <UserCircleIcon className="h-6 w-6 text-gray-600" />
-      </button>
-      <button
-        onClick={() => navigate('/settings')}
-        className="p-3 bg-white/90 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:scale-110"
-        title="Settings"
-      >
-        <Cog6ToothIcon className="h-6 w-6 text-gray-600" />
-      </button>
-      <button
-        onClick={() => navigate('/')}
-        className="p-3 bg-white/90 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:scale-110"
-        title="Logout"
-      >
-        <ArrowRightOnRectangleIcon className="h-6 w-6 text-gray-600" />
-      </button>
+    <div className="fixed top-4 left-4">
+      <div className="flex flex-col space-y-4">
+        <button 
+          onClick={() => navigate('/profile')}
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Profile"
+        >
+          <UserCircleIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          onClick={() => navigate('/settings')}
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Settings"
+        >
+          <Cog6ToothIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Statistics"
+        >
+          <ChartBarIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Saved"
+        >
+          <BookmarkIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Notifications"
+        >
+          <BellIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          onClick={handleSignOut}
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Sign Out"
+        >
+          <ArrowLeftOnRectangleIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+      </div>
     </div>
   )
 }
 
-export default FloatingNav 
+export default FloatingNav

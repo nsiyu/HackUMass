@@ -1,3 +1,9 @@
+export interface AddBirdFormData {
+  name: string
+  species: string
+  location: string
+}
+
 export interface Bird {
   id: string
   name: string
