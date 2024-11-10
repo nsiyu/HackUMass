@@ -2,9 +2,15 @@ import { useGLTF } from "@react-three/drei";
 import { useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js"; // Import clone function
 
 const BirdModel = () => {
-  const { scene, animations } = useGLTF("/BirdModel/robin_bird.glb");
+  const { scene: originalScene, animations } = useGLTF(
+    "/BirdModel/robin_bird.glb"
+  );
+
+  // Use the clone function to properly clone the scene with animations
+  const scene = useMemo(() => clone(originalScene), [originalScene]);
 
   const mixer = useMemo(() => {
     if (scene) {
@@ -31,11 +37,11 @@ const BirdModel = () => {
           child.castShadow = true;
           child.receiveShadow = true;
           if (child.material) {
+            // Clone the material to prevent shared state
+            child.material = child.material.clone();
             child.material.transparent = true; // Set to true if using opacity
             child.material.opacity = 1;
             child.material.side = THREE.DoubleSide;
-            child.material.depthTest = false;
-            child.material.depthWrite = false;
           }
         }
       });
@@ -54,14 +60,9 @@ const BirdModel = () => {
     }
   });
 
-  if (!scene) {
-    return null;
-  }
-
   return (
     <>
       <primitive object={scene} />
-      <boxHelper args={[scene]} />
     </>
   );
 };

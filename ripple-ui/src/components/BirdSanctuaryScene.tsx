@@ -5,6 +5,7 @@ import { Html } from "@react-three/drei";
 import { Bird } from "../types/bird";
 import BirdModel from "./Bird_robin";
 import { Suspense } from "react";
+import SimplifiedBirdModel from "./SimpleModel";
 
 interface BirdProps {
   position: [number, number, number];
@@ -22,13 +23,6 @@ interface BirdProps {
 const Bird = ({ position, ...props }: BirdProps) => {
   const [hovered, setHovered] = useState(false);
   const birdRef = useRef<THREE.Group>(null);
-
-  console.log("Bird component mounting at position:", position);
-
-  console.log(
-    "Attempting to load model from:",
-    window.location.origin + "/BirdModel/robin_bird.glb"
-  );
 
   // Reduce default speed
   const speed = 0.08;
@@ -50,7 +44,7 @@ const Bird = ({ position, ...props }: BirdProps) => {
   const direction = useRef(
     new THREE.Vector3(
       (Math.random() - 0.5) * 2,
-      (Math.random() - 0.5) * 0.5,
+      (Math.random() - 0.5) * 0.3,
       (Math.random() - 0.5) * 2
     ).normalize()
   );
