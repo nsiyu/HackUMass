@@ -11,7 +11,6 @@ load_dotenv()
 
 app = FastAPI()
 
-# List of class labels
 index_to_class = {
     0: 'American_Crow',
     1: 'American_Goldfinch',
@@ -214,9 +213,7 @@ index_to_class = {
     198: 'Crested_Auklet',
     199: 'Least_Auklet'
 }
-# Replace with your actual endpoint URL
 
-# Get the Databricks token from environment variable or use a placeholder
 DATABRICKS_ENDPOINT_URL = os.getenv("DATABRICKS_ENDPOINT_URL")
 
 HEADERS = {
@@ -255,10 +252,8 @@ async def predict(file: UploadFile = File(...)):
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.text)
 
-    # Parse the response and map the highest probability to the class label
     try:
         response_json = response.json()
-        # Adjust the parsing logic based on the actual response structure
         if 'predictions' in response_json:
             probabilities = response_json['predictions'][0]
         elif 'prediction' in response_json and 'predictions' in response_json['prediction']:
@@ -271,7 +266,6 @@ async def predict(file: UploadFile = File(...)):
         predicted_class = index_to_class[predicted_index]
         predicted_probability = probabilities[predicted_index]
 
-        # Return only the predicted class and confidence
         return {
             'predicted_class': predicted_class,
             'confidence': f"{predicted_probability:.2%}"
