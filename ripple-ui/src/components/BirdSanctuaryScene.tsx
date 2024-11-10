@@ -8,6 +8,7 @@ import { Html } from '@react-three/drei'
 import { Bird } from '../types/bird'
 import RockModel from './RockModel'
 import Seagull from "./Seagull";
+import Grass from './Grass'
 
 interface BirdProps {
   position: [number, number, number];
@@ -402,8 +403,8 @@ const BirdSanctuaryScene: FC<BirdSanctuarySceneProps> = ({
 }) => {
   return (
     <>
-      <color attach="background" args={["#E6F4F1"]} />
-      <fog attach="fog" args={["#E6F4F1", 60, 300]} />{" "}
+      <color attach="background" args={["#87CEEB"]} />
+      <fog attach="fog" args={["#87CEEB", 60, 300]} />{" "}
       {/* Increased fog distance */}
       <ambientLight intensity={0.4} />
       <directionalLight
@@ -421,15 +422,22 @@ const BirdSanctuaryScene: FC<BirdSanctuarySceneProps> = ({
         args={["#E6F4F1", "#D4E6E1", 0.7]}
         position={[0, 50, 0]}
       />
-      {/* Ground */}
+      {/* Ground base */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.5, 0]}
         receiveShadow
       >
         <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial color="#D4E6E1" roughness={1} metalness={0} />
+        <meshStandardMaterial 
+          color="#355e3b"
+          roughness={0.8}
+          metalness={0.1}
+        />
       </mesh>
+      
+      {/* Grass layer */}
+      <Grass />
       <Mountains />
       <Trees />
       <Rocks />

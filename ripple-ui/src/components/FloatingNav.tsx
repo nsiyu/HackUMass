@@ -6,6 +6,8 @@ import {
   Cog6ToothIcon, 
   UserCircleIcon, 
   ChartBarIcon,
+  TrophyIcon,
+  CalendarIcon,
   BookmarkIcon,
   BellIcon,
   ArrowLeftOnRectangleIcon
@@ -35,30 +37,27 @@ const FloatingNav: FC<FloatingNavProps> = ({ session, setShowAuthModal }) => {
           <UserCircleIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
         </button>
         <button 
+          onClick={() => navigate('/leaderboard')}
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Leaderboard"
+        >
+          <TrophyIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
+          onClick={() => navigate('/daily-challenge')}
+          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
+          title="Daily Challenges"
+        >
+          <CalendarIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
+        </button>
+        <button 
           onClick={() => navigate('/settings')}
           className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
           title="Settings"
         >
           <Cog6ToothIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
         </button>
-        <button 
-          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
-          title="Statistics"
-        >
-          <ChartBarIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
-        </button>
-        <button 
-          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
-          title="Saved"
-        >
-          <BookmarkIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
-        </button>
-        <button 
-          className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
-          title="Notifications"
-        >
-          <BellIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
-        </button>
+ 
         <button 
           onClick={handleSignOut}
           className="p-3 bg-white/90 border-2 border-light-coral rounded-lg transition-all hover:bg-coral-pink hover:border-coral-pink group"
@@ -66,6 +65,7 @@ const FloatingNav: FC<FloatingNavProps> = ({ session, setShowAuthModal }) => {
         >
           <ArrowLeftOnRectangleIcon className="w-7 h-7 text-light-coral group-hover:text-white" />
         </button>
+
       </div>
     </div>
   )
